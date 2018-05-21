@@ -36,9 +36,9 @@ for row in trainSet.itertuples():
 	gmap.plot(latitudes, longitudes, 'green', edge_width=5)
 	url = "mymap{}.html".format(row[0])
 	gmap.draw(url)
-	#buffer = BytesIO(urllib.urlopen(url).read())
-	#image = Image.open(buffer)
-	#image.save("map{}.png".format(row[0]))
+	buff = BytesIO(urllib.urlopen(url).read())
+	image = Image.open(buff)
+	image.save("map{}.png".format(row[0]))
 	print "Created image for Tripid:" + str(row[0])
 	if len(printed_ids) == 5:
 		break
