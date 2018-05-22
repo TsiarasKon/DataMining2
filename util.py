@@ -1,4 +1,5 @@
 import math
+import gmplot
 
 def harversineDist(p1, p2):
 	l1 = math.radians(p1[0])
@@ -11,3 +12,19 @@ def harversineDist(p1, p2):
 	c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 	R = 6371
 	return R * c
+
+
+def plotMap(coordList, name):
+	longitudes = []
+	latitudes = []
+	longSum = 0
+	latSum = 0
+	for coord in coordList:
+		longitudes.append(coord[0])
+		latitudes.append(coord[1])
+		longSum += coord[0]
+		latSum += coord[1]
+	center = (longSum / len(coordList), latSum / len(coordList))
+	gmap = gmplot.GoogleMapPlotter(center[1], center[0], 12)
+	gmap.plot(latitudes, longitudes, 'green', edge_width=5)
+	gmap.draw(name)

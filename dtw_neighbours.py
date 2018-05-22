@@ -6,7 +6,7 @@ from io import BytesIO
 from PIL import Image
 import urllib
 from fastdtw import fastdtw
-from util import harversineDist
+import util
 
 # read sets
 trainSet = pd.read_csv(
@@ -22,20 +22,23 @@ print "Loaded datasets."
 min5 = [float('inf')]*5
 patternIds = [None]*5
 paths = [None]*5
-for traj in test_trajectories[0]:
+for traj in test_trajectories[0:1]:
 	x = np.array([[z[1], z[2]] for z in traj])
 	for row in trainSet.itertuples():
 		y = np.array([[z[1], z[2]] for z in row[2]])
-		distance, path = fastdtw(x, y, dist=harversineDist)
+		distance, _ = fastdtw(x, y, dist=util.harversineDist)
 		curMax, maxpos = max((v, i) for i, v in enumerate(min5))
 		if distance < curMax:        # new distance is smaller that min5's largest distance
 			min5[maxpos] = distance  # so replace it with it
-			paths[maxpos] = path
+			paths[maxpos] = y
 			patternIds[maxpos] = row[1]
 	print "Calculated traj"
 	print "5 nearest neighbours are: "
 	print min5
 	print patternIds
-
+	# plotting maps:
+	util.plotMap(x, "Test.html")
+	for i, y in enumerate(paths):
+		util.plotMap(y, "N{}.html".format(i))
 
 
