@@ -7,6 +7,7 @@ from PIL import Image
 import urllib
 from fastdtw import fastdtw
 import util
+import time
 
 # read sets
 trainSet = pd.read_csv(
@@ -19,10 +20,11 @@ with open('test_set_a1.csv') as f:
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."
 
-min5 = [float('inf')]*5
-patternIds = [None]*5
-paths = [None]*5
-for traj in test_trajectories[0:1]:
+for tid, traj in enumerate(test_trajectories):
+	min5 = [float('inf')]*5
+	patternIds = [None]*5
+	paths = [None]*5
+	start_time = time.time()
 	x = np.array([[z[1], z[2]] for z in traj])
 	for row in trainSet.itertuples():
 		y = np.array([[z[1], z[2]] for z in row[2]])
@@ -32,13 +34,17 @@ for traj in test_trajectories[0:1]:
 			min5[maxpos] = distance  # so replace it with it
 			paths[maxpos] = y
 			patternIds[maxpos] = row[1]
-	print "Calculated traj"
+	Dt = time.time() - start_time
+	print "Calculated 5 nearest neighbours for trajectory {}.".format(tid)
+	print "Dt = " + str(Dt)
 	print "5 nearest neighbours are: "
+	min5, paths, patternIds = zip(*sorted(zip(min5, paths, patternIds)))		# sorts lists based on min5
 	print min5
 	print patternIds
+	print '\n'
 	# plotting maps:
-	util.plotMap(x, "Test.html")
+	util.plotMap(x, "trajectory{}/Test_traj.html".format(tid))
 	for i, y in enumerate(paths):
-		util.plotMap(y, "N{}.html".format(i))
+		util.plotMap(y, "trajectory{}/N{}.html".format(tid, i))
 
 
