@@ -21,9 +21,11 @@ def findSolution(C, X, Y, i, j, matching_funct):     # first call should be with
     if i == 0 or j == 0:
         return []
     elif matching_funct(X[i-1], Y[j-1]):
-        return findSolution(C, X, Y, i-1, j-1).append(X[i-1])
+    	subsolution = findSolution(C, X, Y, i-1, j-1, matching_funct)
+    	subsolution.append(X[i-1])
+        return subsolution
     else:
         if C[i][j-1] > C[i-1][j]:
-            return findSolution(C, X, Y, i, j-1)
+            return findSolution(C, X, Y, i, j-1, matching_funct)
         else:
-            return findSolution(C, X, Y, i-1, j)
+            return findSolution(C, X, Y, i-1, j, matching_funct)

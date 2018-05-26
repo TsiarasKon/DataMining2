@@ -14,7 +14,7 @@ def harversineDist(p1, p2):
 	return R * c
 
 
-def plotMap(coordList, name):
+def plotMap(coordList, name, subtrajectory=None):
 	longitudes = []
 	latitudes = []
 	longSum = 0
@@ -27,4 +27,11 @@ def plotMap(coordList, name):
 	center = (longSum / len(coordList), latSum / len(coordList))
 	gmap = gmplot.GoogleMapPlotter(center[1], center[0], 12)
 	gmap.plot(latitudes, longitudes, 'green', edge_width=5)
+	if subtrajectory is not None:
+		longitudes = []
+		latitudes = []
+		for coord in subtrajectory:
+			longitudes.append(coord[0])
+			latitudes.append(coord[1])
+		gmap.plot(latitudes, longitudes, 'red', edge_width=5)
 	gmap.draw(name)

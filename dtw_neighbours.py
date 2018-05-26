@@ -8,6 +8,8 @@ import urllib
 from fastdtw import fastdtw
 import util
 import time
+import os
+import shutil
 
 # read sets
 trainSet = pd.read_csv(
@@ -36,15 +38,21 @@ for tid, traj in enumerate(test_trajectories):
 			patternIds[maxpos] = row[1]
 	Dt = time.time() - start_time
 	print "Calculated 5 nearest neighbours for trajectory {}.".format(tid)
-	print "Dt = " + str(Dt)
+	print "Dt = " + str(Dt) + "sec"
 	print "5 nearest neighbours are: "
 	min5, paths, patternIds = zip(*sorted(zip(min5, paths, patternIds)))		# sorts lists based on min5
 	print min5
 	print patternIds
 	print '\n'
 	# plotting maps:
-	util.plotMap(x, "trajectory{}/Test_traj.html".format(tid))
+	dtw_dir = "dtw"
+	if os.path.exists(dtw_dir):
+		shutil.rmtree(dtw_dir, ignore_errors=True)
+	os.makedirs(dtw_dir)
+	traj_dir = "trajectory{}".format(tid)
+	os.makedirs(traj_dir)
+	util.plotMap(x, dtw_dir + traj_dir + "/Test_traj.html")
 	for i, y in enumerate(paths):
-		util.plotMap(y, "trajectory{}/N{}.html".format(tid, i))
+		util.plotMap(y, dtw_dir + traj_dir + "/N{}.html".format(i))
 
 
