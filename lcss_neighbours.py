@@ -28,6 +28,11 @@ with open('test_set_a2.csv') as f:
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."
 
+
+lcss_dir = "lcss"
+if os.path.exists(lcss_dir):
+	shutil.rmtree(lcss_dir, ignore_errors=True)
+
 for tid, traj in enumerate(test_trajectories):
 	max5 = [-1]*5
 	patternIds = [None]*5
@@ -56,14 +61,10 @@ for tid, traj in enumerate(test_trajectories):
 	print patternIds
 	print '\n'
 	# plotting maps:
-	lcss_dir = "lcss"
-	if os.path.exists(lcss_dir):
-		shutil.rmtree(lcss_dir, ignore_errors=True)
-	os.makedirs(lcss_dir)
-	traj_dir = "trajectory{}".format(tid)
+	traj_dir = lcss_dir + "/trajectory{}".format(tid)
 	os.makedirs(traj_dir)
-	util.plotMap(x, lcss_dir + traj_dir + "/Test_traj.html")
+	util.plotMap(x, traj_dir + "/Test_traj_{}.html".format(Dt))
 	for i, y in enumerate(paths):
-		util.plotMap(y, lcss_dir + traj_dir + "/N{}.html".format(i), common_subtrajectories[i])
+		util.plotMap(y, traj_dir + "/N{}_{}.html".format(i, patternIds[i]), common_subtrajectories[i])
 
 

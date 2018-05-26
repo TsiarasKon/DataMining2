@@ -22,6 +22,10 @@ with open('test_set_a1.csv') as f:
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."
 
+dtw_dir = "dtw"
+if os.path.exists(dtw_dir):
+	shutil.rmtree(dtw_dir, ignore_errors=True)
+
 for tid, traj in enumerate(test_trajectories):
 	min5 = [float('inf')]*5
 	patternIds = [None]*5
@@ -45,14 +49,10 @@ for tid, traj in enumerate(test_trajectories):
 	print patternIds
 	print '\n'
 	# plotting maps:
-	dtw_dir = "dtw"
-	if os.path.exists(dtw_dir):
-		shutil.rmtree(dtw_dir, ignore_errors=True)
-	os.makedirs(dtw_dir)
-	traj_dir = "trajectory{}".format(tid)
+	traj_dir = dtw_dir + "/trajectory{}".format(tid)
 	os.makedirs(traj_dir)
-	util.plotMap(x, dtw_dir + traj_dir + "/Test_traj.html")
+	util.plotMap(x, traj_dir + "/Test_traj_{}.html".format(Dt))
 	for i, y in enumerate(paths):
-		util.plotMap(y, dtw_dir + traj_dir + "/N{}.html".format(i))
+		util.plotMap(y, traj_dir + "/N{}_{}.html".format(i, patternIds[i]))
 
 
