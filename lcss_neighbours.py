@@ -2,20 +2,12 @@ import gmplot
 import pandas as pd
 import numpy as np
 from ast import literal_eval
-from io import BytesIO
-from PIL import Image
 import urllib
 import util
 import time
 import os
 import shutil
 import LCSS
-
-threshold = 0.2		# km
-
-def matching_function(x, y, threshold=threshold, dist_funct=util.harversineDist):
-	return (dist_funct(x, y) <= threshold)
-
 
 # read sets
 trainSet = pd.read_csv(
@@ -42,7 +34,7 @@ for tid, traj in enumerate(test_trajectories):
 	x = np.array([[z[1], z[2]] for z in traj])
 	for row in trainSet.itertuples():
 		y = np.array([[z[1], z[2]] for z in row[2]])
-		C = LCSS.LCSS(x, y, matching_function)
+		C = LCSS.LCSS(x, y, util.matching_function)
 		lenx = len(x)
 		leny = len(y)
 		score = C[lenx][leny]
@@ -51,7 +43,7 @@ for tid, traj in enumerate(test_trajectories):
 			max5[minpos] = score  	# so replace it with it
 			paths[minpos] = y
 			patternIds[minpos] = row[1]
-			common_subtrajectories[minpos] = LCSS.findSolution(C, x, y, lenx, leny, matching_function)
+			common_subtrajectories[minpos] = LCSS.findSolution(C, x, y, lenx, leny, util.matching_function)
 	Dt = time.time() - start_time
 	print "Calculated 5 nearest neighbours for trajectory {}.".format(tid)
 	print "Dt = " + str(Dt)

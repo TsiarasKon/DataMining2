@@ -2,8 +2,6 @@ import gmplot
 import pandas as pd
 import numpy as np
 from ast import literal_eval
-from io import BytesIO
-from PIL import Image
 import urllib
 from fastdtw import fastdtw
 import util
