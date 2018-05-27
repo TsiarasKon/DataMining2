@@ -44,9 +44,9 @@ for tid, traj in enumerate(test_trajectories):
 			paths[minpos] = y
 			patternIds[minpos] = row[1]
 			common_subtrajectories[minpos] = LCSS.findSolution(C, x, y, lenx, leny, util.matching_function)
-	Dt = time.time() - start_time
+	Dt = int(time.time() - start_time)
 	print "Calculated 5 nearest neighbours for trajectory {}.".format(tid)
-	print "Dt = " + str(Dt)
+	print "Dt = " + str(Dt) + "sec"
 	print "5 nearest neighbours are: "
 	#max5, paths, patternIds, common_subtrajectories = zip(*sorted(zip(max5, paths, patternIds, common_subtrajectories)))		# sorts lists based on min5
 	print max5
@@ -55,7 +55,7 @@ for tid, traj in enumerate(test_trajectories):
 	# plotting maps:
 	traj_dir = lcss_dir + "/trajectory{}".format(tid)
 	os.makedirs(traj_dir)
-	util.plotMap(x, traj_dir + "/Test_traj_{}.html".format(Dt))
+	util.plotMap(x, traj_dir + "/Test_traj_{}sec.html".format(Dt))
 	for i, y in enumerate(paths):
 		util.plotMap(y, traj_dir + "/N{}_{}.html".format(i, patternIds[i]), common_subtrajectories[i])
 

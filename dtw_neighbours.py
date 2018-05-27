@@ -38,7 +38,7 @@ for tid, traj in enumerate(test_trajectories):
 			min5[maxpos] = distance  # so replace it with it
 			paths[maxpos] = y
 			patternIds[maxpos] = row[1]
-	Dt = time.time() - start_time
+	Dt = int(time.time() - start_time)
 	print "Calculated 5 nearest neighbours for trajectory {}.".format(tid)
 	print "Dt = " + str(Dt) + "sec"
 	print "5 nearest neighbours are: "
@@ -49,7 +49,7 @@ for tid, traj in enumerate(test_trajectories):
 	# plotting maps:
 	traj_dir = dtw_dir + "/trajectory{}".format(tid)
 	os.makedirs(traj_dir)
-	util.plotMap(x, traj_dir + "/Test_traj_{}.html".format(Dt))
+	util.plotMap(x, traj_dir + "/Test_traj_{}sec.html".format(Dt))
 	for i, y in enumerate(paths):
 		util.plotMap(y, traj_dir + "/N{}_{}.html".format(i, patternIds[i]))
 
