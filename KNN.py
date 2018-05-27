@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
-from heapq import heappush, heappop
 from fastdtw import fastdtw
 import util
 
@@ -28,16 +27,18 @@ class KNN:
     def predict_for_one(self, unknown_trajectory):
         if unknown_trajectory is None:
             return None
-        heap = []                        # minheap
+        min5 = [(float('inf'), None)] * self.K     # top-K minimum-distanced neighbours' categories
         for i in range(0, len(self.trajectories)):
-            heappush(heap, (fastdtw(self.trajectories[i], unknown_trajectory, dist=util.harversineDist), self.trajectory_categories[i]))
+            distance = fastdtw(self.trajectories[i], unknown_trajectory, dist=util.harversineDist)
+            maxdist, maxpos = max((v[0], i) for i, v in enumerate(min5))
+            if distance < maxdist:                 # if the i-th trajectory is better than the furthest neighbor so far then replace the latter
+                min5[maxpos] = (distance, self.trajectory_categories[i])
         category_count = {c: 0 for c in self.categories}
-        for _ in range(0, self.K):       # only pop top-K (smallest K distances)
-            _, c = heappop(heap)
-            category_count[c] += 1
+        for i in range(0, self.K):                 # Voting scheme: majority voting
+            category_count[min5[i][1]] += 1
         max = -1
         maxcat = None
-        for cat in self.categories:      # Voting scheme: majority voting
+        for cat in self.categories:
             if category_count[cat] > max:
                 max = category_count[cat]
                 maxcat = cat
@@ -45,13 +46,13 @@ class KNN:
 
 
 def crossvalidation(X, y, K):
-	skf = StratifiedKFold(n_splits=10)
-	scores = []
-	for train_index, test_index in skf.split(X, y):
-		X_train, X_test = X[train_index], X[test_index]
-		y_train, y_test = y[train_index], y[test_index]
-		clf = KNN.KNN(K)
-		clf.fit(X_train, y_train)
-		y_pred = clf.predict(X_test)
-		scores.append(accuracy_score(y_test, y_pred))
-	return np.mean(scores)
+    skf = StratifiedKFold(n_splits=10)
+    scores = []
+    for train_index, test_index in skf.split(X, y):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+        clf = KNN.KNN(K)
+        clf.fit(X_train, y_train)
+        y_pred = clf.predict(X_test)
+        scores.append(accuracy_score(y_test, y_pred))
+    return np.mean(scores)
