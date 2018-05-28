@@ -15,8 +15,8 @@ class KNN:
     def fit(self, train_set, train_categories):
         self.categories = set(train_categories)
         for i in range(len(train_set)):
-			self.trajectories.append(train_set[i])
-			self.trajectory_categories.append(train_categories[i])
+            self.trajectories.append(train_set[i])
+            self.trajectory_categories.append(train_categories[i])
 
     def predict(self, test_set):
         prediction = []
@@ -33,10 +33,18 @@ class KNN:
             maxdist, maxpos = max((v[0], j) for j, v in enumerate(min5))
             if distance < maxdist:                 # if the i-th trajectory is better than the furthest neighbor so far then replace the latter
                 min5[maxpos] = (distance, self.trajectory_categories[i])
+        min5.sort()                                # sort min5 from lowest to highest distance O(5log5) = O(1)
+        # If we find a neighbour-trajectory with EXACTLY the same route as the unknown_trajectory
+        # then, no need to vote, our prediction can be the category of that neighbour
+        if min5[0][0] == 0.0:
+            return min5[0][1]
+        # else we use the following Voting scheme:
+        # A vote's weight depends on the place this trajectory got
+        # 1st place's vote is K/K = 1, 2nd place's vote is (K-1)/K , ... , Kth place's vote is 1/K
         category_count = {c: 0 for c in self.categories}
-        for i in range(self.K):                 # Voting scheme: majority voting
+        for i in range(self.K):
             if min5[i][1] is not None:
-            	category_count[min5[i][1]] += 1
+                category_count[min5[i][1]] += (self.K - i) / self.K              # alternative choice: 1 / min5[i][0]
         maxvotes = -1
         maxcat = None
         for cat in self.categories:
