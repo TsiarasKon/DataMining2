@@ -37,10 +37,11 @@ def plotMap(coordList, name, subtrajectory=None):
 			if matching_function(coordList[i], subtrajectory[0]):
 				break
 		j = 0
-		while j < len(subtrajectory):
+		lenj = len(subtrajectory)
+		while j < lenj:
 			longitudes = []
 			latitudes = []
-			while matching_function(coordList[i], subtrajectory[j]) and i < leni:
+			while i < leni and j < lenj and matching_function(coordList[i], subtrajectory[j]):
 				longitudes.append(subtrajectory[j][0])
 				latitudes.append(subtrajectory[j][1])
 				i += 1

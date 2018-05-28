@@ -1,6 +1,8 @@
 import gmplot
 import pandas as pd
 from ast import literal_eval
+import os
+import shutil
 
 dataset_dir = "./datasets/"
 
@@ -11,6 +13,11 @@ trainSet = pd.read_csv(
 	index_col='tripId'
 )
 print "Loaded trainSet"
+
+vis_dir = "visualization"
+if os.path.exists(vis_dir):
+	shutil.rmtree(vis_dir, ignore_errors=True)
+os.makedirs(vis_dir)
 
 printed_ids = set()         # set of the ids of already printed trajectories
 for row in trainSet.itertuples():
@@ -30,7 +37,7 @@ for row in trainSet.itertuples():
 	center = (longSum / len(row[2]), latSum / len(row[2]))
 	gmap = gmplot.GoogleMapPlotter(center[1], center[0], 12)
 	gmap.plot(latitudes, longitudes, 'green', edge_width=5)
-	gmap.draw("mymap_{}.html".format(row[1]))
+	gmap.draw(vis_dir + "/map_{}.html".format(row[1]))
 	print "Created map for JPID: " + str(row[1])
 	if len(printed_ids) == 5:
 		break

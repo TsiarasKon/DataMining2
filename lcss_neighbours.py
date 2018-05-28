@@ -21,7 +21,6 @@ with open(dataset_dir + 'test_set_a2.csv') as f:
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."
 
-
 lcss_dir = "lcss"
 if os.path.exists(lcss_dir):
 	shutil.rmtree(lcss_dir, ignore_errors=True)
