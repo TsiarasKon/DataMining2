@@ -2,12 +2,15 @@ import pandas as pd
 from ast import literal_eval
 import KNN
 
+dataset_dir = "./datasets/"
+
+
 # read sets
 trainSet = pd.read_csv(
-	'train_set.csv', 
+	dataset_dir + 'train_set.csv', 
 	converters={"Trajectory": literal_eval}
 )
-with open('test_set_a2.csv') as f:
+with open(dataset_dir + 'test_set_a2.csv') as f:
 	next(f)		# skip first line
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."

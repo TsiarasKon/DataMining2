@@ -2,20 +2,21 @@ import gmplot
 import pandas as pd
 import numpy as np
 from ast import literal_eval
-import urllib
 import util
 import time
 import os
 import shutil
 import LCSS
 
+dataset_dir = "./datasets/"
+
 # read sets
 trainSet = pd.read_csv(
-	'train_set.csv', 
+	dataset_dir + 'train_set.csv', 
 	converters={"Trajectory": literal_eval},
 	index_col='tripId'
 )
-with open('test_set_a2.csv') as f:
+with open(dataset_dir + 'test_set_a2.csv') as f:
 	next(f)		# skip first line
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."
@@ -57,6 +58,4 @@ for tid, traj in enumerate(test_trajectories):
 	os.makedirs(traj_dir)
 	util.plotMap(x, traj_dir + "/Test_traj_{}sec.html".format(Dt))
 	for i, y in enumerate(paths):
-		util.plotMap(y, traj_dir + "/N{}_{}.html".format(i, patternIds[i]), common_subtrajectories[i])
-
-
+		util.plotMap(y, traj_dir + "/N{}_{}_{}.html".format(i + 1, patternIds[i], max5[i]), common_subtrajectories[i])

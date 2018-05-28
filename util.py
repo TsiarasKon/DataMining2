@@ -32,19 +32,20 @@ def plotMap(coordList, name, subtrajectory=None):
 	gmap = gmplot.GoogleMapPlotter(center[1], center[0], 12)
 	gmap.plot(latitudes, longitudes, 'green', edge_width=5)
 	if subtrajectory is not None:
-		for i in range(len(coordList)):
+		leni = len(coordList)
+		for i in range(leni):
 			if matching_function(coordList[i], subtrajectory[0]):
 				break
 		j = 0
 		while j < len(subtrajectory):
 			longitudes = []
 			latitudes = []
-			while matching_function(coordList[i], subtrajectory[j]):
+			while matching_function(coordList[i], subtrajectory[j]) and i < leni:
 				longitudes.append(subtrajectory[j][0])
 				latitudes.append(subtrajectory[j][1])
 				i += 1
 				j += 1
 			if longitudes != []:
 				gmap.plot(latitudes, longitudes, 'red', edge_width=5)
-			j += 1
+			i += 1
 	gmap.draw(name)

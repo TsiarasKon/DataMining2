@@ -54,6 +54,8 @@ def crossvalidation(X, y, K):
         y_train, y_test = y[train_index], y[test_index]
         clf = KNN(K)
         clf.fit(X_train.tolist(), y_train.tolist())
-        y_pred = clf.predict(X_test)
-        scores.append(accuracy_score(y_test, y_pred))
+        y_pred = clf.predict(X_test.tolist())
+        curr_acc = accuracy_score(y_test.tolist(), y_pred)
+        scores.append(curr_acc)
+        print "Fold accuracy: " + str(curr_acc)
     return np.mean(scores)
