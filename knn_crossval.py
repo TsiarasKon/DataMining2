@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from ast import literal_eval
 import KNN
 
@@ -12,7 +13,7 @@ def preprocessTrainSet(trainSet):
 	newTrainSet_jpid = []
 	for row in trainSet.itertuples():
 		if category_count[row[2]] >= 10:
-			newTrainSet_traj.append(row[3])
+			newTrainSet_traj.append([[z[1], z[2]] for z in row[3]])
 			newTrainSet_jpid.append(row[2])
 	return (newTrainSet_traj, newTrainSet_jpid)
 
@@ -22,11 +23,11 @@ trainSet = pd.read_csv(
 	converters={"Trajectory": literal_eval}
 )
 print "Loaded train_set."
-trainSet = trainSet[0:500]
+trainSet = trainSet[0:655]		# 10% of train_set
 
 newTrainSet_traj, newTrainSet_jpid = preprocessTrainSet(trainSet)
 print "Preprocessed data."
 print len(newTrainSet_traj)
 
-acc = KNN.crossvalidation(newTrainSet_traj, newTrainSet_jpid, 5)
+acc = KNN.crossvalidation(np.array(newTrainSet_traj), np.array(newTrainSet_jpid), 5)
 print "Accuracy: " + str(acc)

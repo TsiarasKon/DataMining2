@@ -24,7 +24,7 @@ class KNN:
             prediction.append(self.predict_for_one(newpoint))
         return prediction
 
-    def predict_for_one(self, unknown_trajectory):
+    def predict_for_one(self, unknown_trajectory):		# trajectories here are in the form of [[lon1, lat1], [lon2, lat2], ...]
         if unknown_trajectory is None:
             return None
         min5 = [(float('inf'), None)] * self.K     # top-K minimum-distanced neighbours' categories
@@ -41,10 +41,10 @@ class KNN:
         # else we use the following Voting scheme:
         # A vote's weight depends on the place this trajectory got
         # 1st place's vote is K/K = 1, 2nd place's vote is (K-1)/K , ... , Kth place's vote is 1/K
-        category_count = {c: 0 for c in self.categories}
+        category_count = {c: 0.0 for c in self.categories}
         for i in range(self.K):
             if min5[i][1] is not None:
-                category_count[min5[i][1]] += (self.K - i) / self.K              # alternative choice: 1 / min5[i][0]
+                category_count[min5[i][1]] += float(self.K - i) / float(self.K)              # alternative choice: 1 / min5[i][0]
         maxvotes = -1
         maxcat = None
         for cat in self.categories:
