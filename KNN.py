@@ -34,10 +34,12 @@ class KNN:
             if distance < maxdist:                 # if the i-th trajectory is better than the furthest neighbor so far then replace the latter
                 min5[maxpos] = (distance, self.trajectory_categories[i])
         min5.sort()                                # sort min5 from lowest to highest distance O(5log5) = O(1)
+        """ Possible improvement, but we chose not to use it in case of false trainSet's JPIDs:
         # If we find a neighbour-trajectory with EXACTLY the same route as the unknown_trajectory
         # then, no need to vote, our prediction can be the category of that neighbour
         if min5[0][0] == 0.0:
             return min5[0][1]
+        """
         # else we use the following Voting scheme:
         # A vote's weight depends on the place this trajectory got
         # 1st place's vote is K/K = 1, 2nd place's vote is (K-1)/K , ... , Kth place's vote is 1/K
