@@ -27,26 +27,26 @@ class KNN:
     def predict_for_one(self, unknown_trajectory):		# trajectories here are in the form of [[lon1, lat1], [lon2, lat2], ...]
         if unknown_trajectory is None:
             return None
-        min5 = [(float('inf'), None)] * self.K     # top-K minimum-distanced neighbours' categories
+        mink = [(float('inf'), None)] * self.K     # top-K minimum-distanced neighbours' categories
         for i in range(len(self.trajectories)):
             distance, _ = fastdtw(self.trajectories[i], unknown_trajectory, dist=util.harversineDist)
-            maxdist, maxpos = max((v[0], j) for j, v in enumerate(min5))
+            maxdist, maxpos = max((v[0], j) for j, v in enumerate(mink))
             if distance < maxdist:                 # if the i-th trajectory is better than the furthest neighbor so far then replace the latter
-                min5[maxpos] = (distance, self.trajectory_categories[i])
-        min5.sort()                                # sort min5 from lowest to highest distance O(5log5) = O(1)
+                mink[maxpos] = (distance, self.trajectory_categories[i])
+        mink.sort()                                # sort mink from lowest to highest distance O(5log5) = O(1)
         """ Possible improvement, but we chose not to use it in case of false trainSet's JPIDs:
         # If we find a neighbour-trajectory with EXACTLY the same route as the unknown_trajectory
         # then, no need to vote, our prediction can be the category of that neighbour
-        if min5[0][0] == 0.0:
-            return min5[0][1]
+        if mink[0][0] == 0.0:
+            return mink[0][1]
         """
-        # else we use the following Voting scheme:
+        # Voting scheme:
         # A vote's weight depends on the place this trajectory got
         # 1st place's vote is K/K = 1, 2nd place's vote is (K-1)/K , ... , Kth place's vote is 1/K
         category_count = {c: 0.0 for c in self.categories}
         for i in range(self.K):
-            if min5[i][1] is not None:
-                category_count[min5[i][1]] += float(self.K - i) / float(self.K)              # alternative choice: 1 / min5[i][0]
+            if mink[i][1] is not None:
+                category_count[mink[i][1]] += float(self.K - i) / float(self.K)  
         maxvotes = -1
         maxcat = None
         for cat in self.categories:

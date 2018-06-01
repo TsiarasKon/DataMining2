@@ -21,7 +21,7 @@ with open(dataset_dir + 'test_set_a1.csv') as f:
 	test_trajectories = [literal_eval(line.rstrip("\n")) for line in f]
 print "Loaded datasets."
 
-dtw_dir = "dtw"
+dtw_dir = "dtw_results"
 if os.path.exists(dtw_dir):
 	shutil.rmtree(dtw_dir, ignore_errors=True)
 

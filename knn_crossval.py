@@ -26,8 +26,7 @@ print "Loaded train_set."
 trainSet = trainSet[0:655]		# 10% of train_set
 
 newTrainSet_traj, newTrainSet_jpid = preprocessTrainSet(trainSet)
-print "Preprocessed data."
-print len(newTrainSet_traj)
+print "Train_set trajectories num after preprocessing: " + str(len(newTrainSet_traj))
 
 acc = KNN.crossvalidation(np.array(newTrainSet_traj), np.array(newTrainSet_jpid), 5)
 print "Accuracy: " + str(acc)
